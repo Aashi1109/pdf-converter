@@ -1,0 +1,19 @@
+services:
+  converter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: aashishpal09/converter:latest
+    ports:
+      - "${PORT:-8080}:8080"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./temp:/app/temp # Persistence for temp files if needed for debugging
+    restart: unless-stopped
+
+networks:
+  default:
+    name: converter-network
