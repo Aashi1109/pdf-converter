@@ -6,7 +6,7 @@ import { JSONSchemaType } from "ajv";
 
 import { logger } from "./src/logger.js";
 import { convertToPdf, InputFormat } from "./src/converter.js";
-import { uploadToCloudinary } from "./src/storage.js";
+import { uploadFile } from "./src/storage.js";
 import { AppError, ValidationError } from "./src/errors.js";
 import { validateBody } from "./src/middleware.js";
 
@@ -70,8 +70,8 @@ app.post(
         return res.send(pdfBuffer);
       }
 
-      // 2. Upload generated buffer to Cloudinary.
-      const cdnUrl = await uploadToCloudinary(pdfBuffer);
+      // 2. Upload generated buffer to storage provider.
+      const cdnUrl = await uploadFile(pdfBuffer);
 
       logger.info({ cdnUrl }, "File uploaded successfully");
 
