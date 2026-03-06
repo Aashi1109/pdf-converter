@@ -13,8 +13,18 @@ import { validateBody } from "./src/middleware.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Automatic request/response logging
-app.use(pinoHttp({ logger }));
+// Automatic request/response logging (tuned to reduce noise)
+app.use(
+  pinoHttp({
+    logger,
+    // Only log non-2xx/3xx responses by default to avoid noisy access logs
+    customLogLevel: function (res, err) {
+      if (err || (res.statusCode && res.statusCode >= 500)) return "error";
+      if (res.statusCode && res.statusCode >= 400) return "warn";
+      return "silent";
+    },
+  }),
+);
 
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));

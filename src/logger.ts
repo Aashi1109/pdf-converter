@@ -1,12 +1,11 @@
 import pino from "pino";
 
-/**
- * Configure Pino logger
- * - In production: Output structured JSON (ideal for Google Cloud Logging)
- * - In development: Use pino-pretty for readable logs if available (optional)
- */
+const level =
+  process.env.LOG_LEVEL ||
+  (process.env.NODE_ENV === "production" ? "warn" : "info");
+
 export const logger = pino({
-  level: process.env.LOG_LEVEL || "info",
+  level,
   formatters: {
     level: (label) => {
       return { level: label.toUpperCase() };
